@@ -1,0 +1,16 @@
+{
+  "name": "notes_app",
+  "version": "1.0.0",
+  "description": "An app to createdteded notes",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Liza Dolgova",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "validator": "^10.8.0",
+    "yargs": "^17.0.0-candidate.13"
+  }
+}
