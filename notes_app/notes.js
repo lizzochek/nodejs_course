@@ -23,8 +23,9 @@ const loadNotes = () => {
 const addNote = (title, content) => {
   const notes = loadNotes();
 
-  const duplicateNotes = notes.filter((note) => note.title === title);
-  if (duplicateNotes.length === 0) {
+  const duplicateNote = notes.find((note) => note.title === title);
+
+  if (!duplicateNote) {
     notes.push({
       title: title,
       content: content,
@@ -49,7 +50,9 @@ const removeNote = (title) => {
 
 const listNotes = () => {
   const notes = loadNotes();
+
   console.log(chalk.white.inverse(getNotes()));
+
   notes.forEach((note) => {
     console.log(`${chalk.magenta(note.title)}`);
   });
