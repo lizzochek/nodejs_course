@@ -29,9 +29,9 @@ const addNote = (title, content) => {
       title: title,
       content: content,
     });
-    console.log(chalk.green.inverse("New node added"));
+    console.log(chalk.green.inverse("New note added"));
   } else {
-    console.log(chalk.red.inverse("Node title taken"));
+    console.log(chalk.red.inverse("note title taken"));
   }
 
   saveNotes(notes);
@@ -47,8 +47,17 @@ const removeNote = (title) => {
   else console.log(chalk.green.inverse("Note was removed"));
 };
 
+const listNotes = () => {
+  const notes = loadNotes();
+  console.log(chalk.white.inverse(getNotes()));
+  notes.forEach((note) => {
+    console.log(`${chalk.magenta(note.title)}`);
+  });
+};
+
 module.exports = {
   getNotes: getNotes,
   addNote: addNote,
   removeNote: removeNote,
+  listNotes: listNotes,
 };
