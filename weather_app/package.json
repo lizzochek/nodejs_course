@@ -1,0 +1,14 @@
+{
+  "name": "weather_app",
+  "version": "1.0.0",
+  "description": "A program for getting the current weather",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Liza Dolhova",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.88.2"
+  }
+}
