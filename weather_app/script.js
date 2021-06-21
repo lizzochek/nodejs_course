@@ -1,7 +1,7 @@
 const request = require("request");
 
 const url =
-  "http://api.weatherstack.com/current?access_key=6796f824b09717014ea7e2f511b88e69&query=37.8267,-122.4233";
+  "http://api.weatherstack.com/current?access_key=6796f824b09717014ea7e2f511b88e69&query=50.378623,30.7868999";
 request(
   {
     url: url,
@@ -11,10 +11,17 @@ request(
     //Response body already comes parsed
     //using the parameter in the first argument
     //of the function
-    const data = response.body.current;
-    console.log(
-      `${data.weather_descriptions[0]}. It is currently ${data.temperature} degrees out. It feels like ${data.feelslike} degrees`
-    );
+
+    if (error) {
+      console.log("Unable to connect to the service");
+    } else if (response.body.error) {
+      console.log("Unable to find location");
+    } else {
+      const data = response.body.current;
+      console.log(
+        `${data.weather_descriptions[0]}. It is currently ${data.temperature} degrees out. It feels like ${data.feelslike} degrees`
+      );
+    }
   }
 );
 
@@ -27,11 +34,17 @@ request(
     json: true,
   },
   (error, response) => {
-    const center = response.body.features[0].center;
-    const placeName = response.body.features[0].place_name;
-    const lat = center[1];
-    const lng = center[0];
+    if (error) {
+      console.log("Unable to connect to the service");
+    } else if (!response.body.features) {
+      console.log("Unable to find location");
+    } else {
+      const center = response.body.features[0].center;
+      const placeName = response.body.features[0].place_name;
+      const lat = center[1];
+      const lng = center[0];
 
-    console.log(`Coordinates of ${placeName} are: ${lat}, ${lng}`);
+      console.log(`Coordinates of ${placeName} are: ${lat}, ${lng}`);
+    }
   }
 );
