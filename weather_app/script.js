@@ -1,50 +1,19 @@
 const request = require("request");
+const { geocode, weather } = require("./utils.js");
 
-const url =
-  "http://api.weatherstack.com/current?access_key=6796f824b09717014ea7e2f511b88e69&query=50.378623,30.7868999";
-request(
-  {
-    url: url,
-    json: true,
-  },
-  (error, response) => {
-    //Response body already comes parsed
-    //using the parameter in the first argument
-    //of the function
+const city = process.argv[2];
+if (!city) return console.log("Please provide a place!");
 
-    if (error) {
-      console.log("Unable to connect to the service");
-    } else if (response.body.error) {
-      console.log("Unable to find location");
-    } else {
-      const data = response.body.current;
-      console.log(
-        `${data.weather_descriptions[0]}. It is currently ${data.temperature} degrees out. It feels like ${data.feelslike} degrees`
-      );
-    }
-  }
-);
+geocode(city, (error, data) => {
+  if (error) return console.log(error);
 
-const geocodeUrl =
-  "https://api.mapbox.com/geocoding/v5/mapbox.places/Los%20Angeles.json?access_token=pk.eyJ1IjoibGl6em9jaGVrIiwiYSI6ImNrcHNsNXdhYTBha3Iybm5vdjJ4YmgxbmUifQ.va8Aq6IDHO-ucrq2mmfjpw&limit=1";
+  const location = data.placeName;
 
-request(
-  {
-    url: geocodeUrl,
-    json: true,
-  },
-  (error, response) => {
-    if (error) {
-      console.log("Unable to connect to the service");
-    } else if (!response.body.features) {
-      console.log("Unable to find location");
-    } else {
-      const center = response.body.features[0].center;
-      const placeName = response.body.features[0].place_name;
-      const lat = center[1];
-      const lng = center[0];
+  weather(data.lat, data.lng, (error, data) => {
+    if (error) return console.log(error);
 
-      console.log(`Coordinates of ${placeName} are: ${lat}, ${lng}`);
-    }
-  }
-);
+    console.log(
+      `Weather for ${location}:\n${data.weather_descriptions[0]}.\nIt is currently ${data.temperature} degrees out.\nIt feels like ${data.feelslike} degrees`
+    );
+  });
+});
