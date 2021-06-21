@@ -17,3 +17,21 @@ request(
     );
   }
 );
+
+const geocodeUrl =
+  "https://api.mapbox.com/geocoding/v5/mapbox.places/Los%20Angeles.json?access_token=pk.eyJ1IjoibGl6em9jaGVrIiwiYSI6ImNrcHNsNXdhYTBha3Iybm5vdjJ4YmgxbmUifQ.va8Aq6IDHO-ucrq2mmfjpw&limit=1";
+
+request(
+  {
+    url: geocodeUrl,
+    json: true,
+  },
+  (error, response) => {
+    const center = response.body.features[0].center;
+    const placeName = response.body.features[0].place_name;
+    const lat = center[1];
+    const lng = center[0];
+
+    console.log(`Coordinates of ${placeName} are: ${lat}, ${lng}`);
+  }
+);
