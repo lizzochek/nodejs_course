@@ -4,12 +4,10 @@ const { geocode, weather } = require("./utils.js");
 const city = process.argv[2];
 if (!city) return console.log("Please provide a place!");
 
-geocode(city, (error, data) => {
+geocode(city, (error, { placeName: location, lat, lng }) => {
   if (error) return console.log(error);
 
-  const location = data.placeName;
-
-  weather(data.lat, data.lng, (error, data) => {
+  weather(lat, lng, (error, data) => {
     if (error) return console.log(error);
 
     console.log(
