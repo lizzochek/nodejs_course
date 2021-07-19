@@ -9,6 +9,7 @@
   "author": "Yelyzaveta Dolhova",
   "license": "MIT",
   "dependencies": {
-    "mongodb": "^4.0.0"
+    "mongodb": "^4.0.0",
+    "mongoose": "^5.13.3"
   }
 }
