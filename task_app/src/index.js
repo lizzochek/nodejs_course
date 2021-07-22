@@ -3,9 +3,6 @@
 const express = require("express");
 const mongoose = require("./db/mongoose.js");
 
-const User = require("./models/user.js");
-const Task = require("./models/task.js");
-
 const {
   addUser,
   getUsers,

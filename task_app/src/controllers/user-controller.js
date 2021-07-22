@@ -5,6 +5,7 @@ const addUser = async (req, res) => {
   try {
     const user = new User(req.body);
 
+    //Hash password
     await user.save();
     res.status(201).send(user);
   } catch (err) {
@@ -45,13 +46,23 @@ const updateUserById = async (req, res) => {
   if (!isValidOperation)
     return res.status(400).send({ error: "Invalid updates" });
 
+  //Hash password
   try {
     const _id = req.params.id;
 
-    const user = await User.findByIdAndUpdate(_id, req.body, {
-      new: true, //Returns and object after update, not before
-      runValidators: true, //Validate the changes
+    const user = await User.findById(_id);
+
+    updates.forEach((update) => {
+      user[update] = req.body[update];
     });
+
+    await user.save();
+
+    //Can't use this part for middlewares
+    //const user = await User.findByIdAndUpdate(_id, req.body, {
+    //  new: true, //Returns and object after update, not before
+    //  runValidators: true, //Validate the changes
+    //});
     if (!user) return res.status(404).send();
 
     res.send(user);
@@ -67,7 +78,7 @@ const deleteUserById = async (req, res) => {
 
     if (!user) return res.status(404).send();
 
-    res.send("User was successfully deleted");
+    res.send("User was successfully deleted", user);
   } catch (err) {
     res.status(500).send(err);
   }
