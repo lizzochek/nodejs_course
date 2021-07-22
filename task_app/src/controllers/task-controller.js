@@ -61,9 +61,23 @@ const updateTaskById = async (req, res) => {
   }
 };
 
+const deleteTaskById = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const task = await Task.findByIdAndDelete(_id);
+
+    if (!task) return res.status(404).send();
+
+    res.send("Task was successfully deleted");
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
+
 module.exports = {
   addTask,
   getTasks,
   getTaskById,
   updateTaskById,
+  deleteTaskById,
 };
