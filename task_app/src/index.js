@@ -10,11 +10,13 @@ const {
   addUser,
   getUsers,
   getUserById,
+  updateUserById,
 } = require("./controllers/user-controller.js");
 const {
   addTask,
   getTasks,
   getTaskById,
+  updateTaskById,
 } = require("./controllers/task-controller.js");
 
 const app = express();
@@ -26,18 +28,16 @@ app.use(express.json());
 //Users
 
 app.post("/users", addUser);
-
 app.get("/users", getUsers);
-
 app.get("/users/:id", getUserById);
+app.patch("/users/:id", updateUserById);
 
 //Tasks
 
 app.post("/tasks", addTask);
-
 app.get("/tasks", getTasks);
-
 app.get("/tasks/:id", getTaskById);
+app.patch("/tasks/:id", updateTaskById);
 
 app.listen(port, () => {
   console.log(`Server is up on port ${port}`);

@@ -35,8 +35,35 @@ const getTaskById = async (req, res) => {
   }
 };
 
+const updateTaskById = async (req, res) => {
+  const allowedUpdates = ["description", "completed"];
+  const updates = Object.keys(req.body);
+
+  const isValidOperation = updates.every((update) =>
+    allowedUpdates.includes(update)
+  );
+
+  if (!isValidOperation)
+    return res.status(400).send({ error: "Invalid updates" });
+
+  try {
+    const _id = req.params.id;
+    const task = await Task.findByIdAndUpdate(_id, req.body, {
+      new: true, //Returns and object after update, not before
+      runValidators: true, //Validate the changes
+    });
+
+    if (!task) return res.status(404).send();
+
+    res.send(task);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
 module.exports = {
   addTask,
   getTasks,
   getTaskById,
+  updateTaskById,
 };
