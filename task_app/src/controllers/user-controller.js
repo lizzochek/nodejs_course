@@ -52,9 +52,7 @@ const updateUserById = async (req, res) => {
 
     const user = await User.findById(_id);
 
-    updates.forEach((update) => {
-      user[update] = req.body[update];
-    });
+    updates.forEach((update) => (user[update] = req.body[update]));
 
     await user.save();
 

@@ -48,10 +48,18 @@ const updateTaskById = async (req, res) => {
 
   try {
     const _id = req.params.id;
-    const task = await Task.findByIdAndUpdate(_id, req.body, {
-      new: true, //Returns and object after update, not before
-      runValidators: true, //Validate the changes
-    });
+
+    const task = await Task.findById(_id);
+
+    updates.forEach((update) => (task[update] = req.body[update]));
+
+    await task.save();
+
+    //Not suitable for middleware usage
+    // const task = await Task.findByIdAndUpdate(_id, req.body, {
+    //   new: true, //Returns and object after update, not before
+    //   runValidators: true, //Validate the changes
+    // });
 
     if (!task) return res.status(404).send();
 
