@@ -9,6 +9,7 @@ const {
   getUserById,
   updateUserById,
   deleteUserById,
+  loginUser,
 } = require("./controllers/user-controller.js");
 const {
   addTask,
@@ -31,6 +32,7 @@ app.get("/users", getUsers);
 app.get("/users/:id", getUserById);
 app.patch("/users/:id", updateUserById);
 app.delete("/users/:id", deleteUserById);
+app.post("/users/login", loginUser);
 
 //Tasks
 
