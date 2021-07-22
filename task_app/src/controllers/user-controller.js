@@ -5,9 +5,11 @@ const addUser = async (req, res) => {
   try {
     const user = new User(req.body);
 
-    //Hash password
+    //Hash password by middleware
     await user.save();
-    res.status(201).send(user);
+
+    const token = await user.generateAuthToken();
+    res.status(201).send({ user, token });
   } catch (err) {
     res.status(400).send(err);
   }
@@ -16,6 +18,7 @@ const addUser = async (req, res) => {
 const getUsers = async (req, res) => {
   try {
     const users = new User(req.body);
+
     res.send(users);
   } catch (err) {
     console.log(err);
@@ -46,7 +49,6 @@ const updateUserById = async (req, res) => {
   if (!isValidOperation)
     return res.status(400).send({ error: "Invalid updates" });
 
-  //Hash password
   try {
     const _id = req.params.id;
 
@@ -54,6 +56,7 @@ const updateUserById = async (req, res) => {
 
     updates.forEach((update) => (user[update] = req.body[update]));
 
+    //Hash password by middleware
     await user.save();
 
     //Can't use this part for middlewares
@@ -89,7 +92,8 @@ const loginUser = async (req, res) => {
       req.body.password
     );
 
-    res.send(user);
+    const token = await user.generateAuthToken();
+    res.send({ user, token });
   } catch (err) {
     res.status(400).send(err.message);
   }
