@@ -15,15 +15,8 @@ const addUser = async (req, res) => {
   }
 };
 
-const getUsers = async (req, res) => {
-  try {
-    const users = new User(req.body);
-
-    res.send(users);
-  } catch (err) {
-    console.log(err);
-    res.status(500).send();
-  }
+const getUserProfile = async (req, res) => {
+  res.send(req.user);
 };
 
 const getUserById = async (req, res) => {
@@ -101,7 +94,7 @@ const loginUser = async (req, res) => {
 
 module.exports = {
   addUser,
-  getUsers,
+  getUserProfile,
   getUserById,
   updateUserById,
   deleteUserById,
