@@ -52,7 +52,7 @@ const updateUserById = async (req, res) => {
     //Hash password by middleware
     await user.save();
 
-    //Can't use this part for middlewares
+    //Can't use this part for middleware
     //const user = await User.findByIdAndUpdate(_id, req.body, {
     //  new: true, //Returns and object after update, not before
     //  runValidators: true, //Validate the changes
@@ -92,6 +92,31 @@ const loginUser = async (req, res) => {
   }
 };
 
+const logoutUser = async (req, res) => {
+  try {
+    req.user.tokens = req.user.tokens.filter((token) => {
+      return token.token !== req.token;
+    });
+
+    await req.user.save();
+
+    res.status(200).send("User was successfully logged out");
+  } catch (err) {
+    res.status(500).send();
+  }
+};
+
+const logoutAll = async (req, res) => {
+  try {
+    req.user.tokens = [];
+    await req.user.save();
+
+    res.status(200).send("All the devices were successfully logged out");
+  } catch (err) {
+    res.status(500).send();
+  }
+};
+
 module.exports = {
   addUser,
   getUserProfile,
@@ -99,4 +124,6 @@ module.exports = {
   updateUserById,
   deleteUserById,
   loginUser,
+  logoutUser,
+  logoutAll,
 };
