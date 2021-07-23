@@ -55,6 +55,16 @@ userSchema.methods.generateAuthToken = async function () {
   return token;
 };
 
+//toJSON runs when res.send() is called
+userSchema.methods.toJSON = function () {
+  const userObject = this.toObject();
+
+  delete userObject.password;
+  delete userObject.tokens;
+
+  return userObject;
+};
+
 //Methods are called on an instance, statics are called on a class
 userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
