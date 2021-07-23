@@ -19,19 +19,7 @@ const getUserProfile = async (req, res) => {
   res.send(req.user);
 };
 
-const getUserById = async (req, res) => {
-  try {
-    const _id = req.params.id;
-
-    const user = await User.findById(_id);
-    if (!user) return res.status(404).send();
-    res.send(user);
-  } catch (err) {
-    res.status(500).send();
-  }
-};
-
-const updateUserById = async (req, res) => {
+const updateUser = async (req, res) => {
   const allowedUpdates = ["name", "email", "password", "age"];
   const updates = Object.keys(req.body);
 
@@ -43,9 +31,7 @@ const updateUserById = async (req, res) => {
     return res.status(400).send({ error: "Invalid updates" });
 
   try {
-    const _id = req.params.id;
-
-    const user = await User.findById(_id);
+    const user = await User.findById(req.user._id);
 
     updates.forEach((update) => (user[update] = req.body[update]));
 
@@ -65,14 +51,14 @@ const updateUserById = async (req, res) => {
   }
 };
 
-const deleteUserById = async (req, res) => {
+const deleteUser = async (req, res) => {
   try {
-    const _id = req.params.id;
-    const user = await User.findByIdAndDelete(_id);
+    //Not needed any more
+    // const user = await User.findByIdAndDelete(req.user._id);
+    // if (!user) return res.status(404).send();
 
-    if (!user) return res.status(404).send();
-
-    res.send("User was successfully deleted", user);
+    await req.user.remove();
+    res.send("User was successfully deleted");
   } catch (err) {
     res.status(500).send(err);
   }
@@ -120,9 +106,8 @@ const logoutAll = async (req, res) => {
 module.exports = {
   addUser,
   getUserProfile,
-  getUserById,
-  updateUserById,
-  deleteUserById,
+  updateUser,
+  deleteUser,
   loginUser,
   logoutUser,
   logoutAll,
