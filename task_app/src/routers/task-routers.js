@@ -14,10 +14,10 @@ const {
 
 const router = new express.Router();
 
-router.post("/tasks", addTask);
-router.get("/tasks", getTasks);
-router.get("/tasks/:id", getTaskById);
-router.patch("/tasks/:id", updateTaskById);
-router.delete("/tasks/:id", deleteTaskById);
+router.post("/tasks", auth, addTask);
+router.get("/tasks", auth, getTasks);
+router.get("/tasks/:id", auth, getTaskById);
+router.patch("/tasks/:id", auth, updateTaskById);
+router.delete("/tasks/:id", auth, deleteTaskById);
 
 module.exports = router;

@@ -4,7 +4,10 @@ const Task = require("../models/task.js");
 
 const addTask = async (req, res) => {
   try {
-    const task = new Task(req.body);
+    const task = new Task({
+      ...req.body,
+      owner: req.user._id,
+    });
     await task.save();
 
     res.status(201).send(task);
@@ -15,7 +18,7 @@ const addTask = async (req, res) => {
 
 const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({});
+    const tasks = await Task.find({ owner: req.user._id });
     res.send(tasks);
   } catch (err) {
     res.status(500).send();
@@ -24,9 +27,11 @@ const getTasks = async (req, res) => {
 
 const getTaskById = async (req, res) => {
   try {
-    const _id = req.params.id;
+    const task = await Task.findOne({
+      _id: req.params.id,
+      owner: req.user._id,
+    });
 
-    const task = await Task.findById(_id);
     if (!task) return res.status(404).send();
 
     res.send(task);
@@ -47,9 +52,11 @@ const updateTaskById = async (req, res) => {
     return res.status(400).send({ error: "Invalid updates" });
 
   try {
-    const _id = req.params.id;
-
-    const task = await Task.findById(_id);
+    const task = await Task.findOne({
+      _id: req.params.id,
+      owner: req.user._id,
+    });
+    if (!task) return res.status(404).send();
 
     updates.forEach((update) => (task[update] = req.body[update]));
 
@@ -61,8 +68,6 @@ const updateTaskById = async (req, res) => {
     //   runValidators: true, //Validate the changes
     // });
 
-    if (!task) return res.status(404).send();
-
     res.send(task);
   } catch (err) {
     res.status(400).send(err);
@@ -71,8 +76,10 @@ const updateTaskById = async (req, res) => {
 
 const deleteTaskById = async (req, res) => {
   try {
-    const _id = req.params.id;
-    const task = await Task.findByIdAndDelete(_id);
+    const task = await Task.findOneAndDelete({
+      _id: req.params.id,
+      owner: req.user._id,
+    });
 
     if (!task) return res.status(404).send();
 
