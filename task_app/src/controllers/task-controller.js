@@ -16,8 +16,11 @@ const addTask = async (req, res) => {
   }
 };
 
-// tasks?completed=true
-// tasks?limit=10&skip=0
+// GET /tasks?completed=true
+// GET /tasks?limit=10&skip=0
+// GET /tasks?sortBy=createdAt:desc
+//ascending=1, descending=-1
+
 const getTasks = async (req, res) => {
   try {
     const searchOptions = {
@@ -25,9 +28,16 @@ const getTasks = async (req, res) => {
     };
     if (req.query.completed) searchOptions.completed = req.query.completed;
 
+    const sort = {};
+    if (req.query.sortBy) {
+      const parts = req.query.sortBy.split(":");
+      sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
+    }
+
     const tasks = await Task.find(searchOptions, null, {
       limit: parseInt(req.query.limit),
       skip: parseInt(req.query.skip),
+      sort,
     });
 
     res.send(tasks);
