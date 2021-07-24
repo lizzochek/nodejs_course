@@ -18,7 +18,11 @@ const addTask = async (req, res) => {
 
 const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ owner: req.user._id });
+    const tasks = await Task.find({
+      completed: req.query.completed,
+      owner: req.user._id,
+    });
+
     res.send(tasks);
   } catch (err) {
     res.status(500).send();
@@ -36,6 +40,7 @@ const getTaskById = async (req, res) => {
 
     res.send(task);
   } catch (err) {
+    console.log(err);
     res.status(500).send();
   }
 };
