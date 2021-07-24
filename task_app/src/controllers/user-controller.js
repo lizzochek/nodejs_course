@@ -1,5 +1,6 @@
 "use strict";
 const User = require("../models/user.js");
+const sharp = require("sharp");
 
 const addUser = async (req, res) => {
   try {
@@ -104,7 +105,12 @@ const logoutAll = async (req, res) => {
 };
 
 const uploadFile = async (req, res) => {
-  req.user.avatar = req.file.buffer;
+  const buffer = await sharp(req.file.buffer)
+    .resize({ width: 250, height: 250 })
+    .png()
+    .toBuffer();
+
+  req.user.avatar = buffer;
   await req.user.save();
 
   res.send("File was successfully uploaded");
@@ -123,7 +129,7 @@ const getAvatar = async (req, res) => {
 
     if (!user || !user.avatar) throw new Error("Something went wrong");
 
-    res.set("Content-Type", "image/jpg");
+    res.set("Content-Type", "image/png");
     res.send(user.avatar);
   } catch (err) {
     res.status(404).send(err.message);
