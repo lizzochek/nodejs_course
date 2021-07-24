@@ -6,7 +6,6 @@ const auth = require("../middleware/auth.js");
 const multer = require("multer");
 
 const upload = multer({
-  dest: "avatars",
   limits: {
     fileSize: 1000000,
   },
@@ -32,6 +31,7 @@ const {
   logoutAll,
   uploadFile,
   errorHandler,
+  deleteAvatar,
 } = require("../controllers/user-controller.js");
 
 const router = new express.Router();
@@ -45,9 +45,11 @@ router.post("/users/logout", auth, logoutUser);
 router.post("/users/logoutAll", auth, logoutAll);
 router.post(
   "/users/me/avatar",
+  auth,
   upload.single("avatar"),
   uploadFile,
   errorHandler
 );
+router.delete("/users/me/avatar", auth, deleteAvatar);
 
 module.exports = router;

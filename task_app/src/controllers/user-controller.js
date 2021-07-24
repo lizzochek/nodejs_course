@@ -104,7 +104,17 @@ const logoutAll = async (req, res) => {
 };
 
 const uploadFile = async (req, res) => {
+  req.user.avatar = req.file.buffer;
+  await req.user.save();
+
   res.send("File was successfully uploaded");
+};
+
+const deleteAvatar = async (req, res) => {
+  req.user.avatar = undefined;
+  await req.user.save();
+
+  res.send("Avatar was successfully deleted");
 };
 
 const errorHandler = async (error, req, res, next) => {
@@ -121,4 +131,5 @@ module.exports = {
   logoutAll,
   uploadFile,
   errorHandler,
+  deleteAvatar,
 };
