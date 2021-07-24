@@ -103,6 +103,14 @@ const logoutAll = async (req, res) => {
   }
 };
 
+const uploadFile = async (req, res) => {
+  res.send("File was successfully uploaded");
+};
+
+const errorHandler = async (error, req, res, next) => {
+  res.status(400).send({ error: error.message });
+};
+
 module.exports = {
   addUser,
   getUserProfile,
@@ -111,4 +119,6 @@ module.exports = {
   loginUser,
   logoutUser,
   logoutAll,
+  uploadFile,
+  errorHandler,
 };
