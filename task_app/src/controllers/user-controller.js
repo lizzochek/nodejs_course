@@ -1,6 +1,10 @@
 "use strict";
 const User = require("../models/user.js");
 const sharp = require("sharp");
+const {
+  sendWelcomeEmail,
+  sendCancellationEmail,
+} = require("../emails/account.js");
 
 const addUser = async (req, res) => {
   try {
@@ -8,6 +12,7 @@ const addUser = async (req, res) => {
 
     //Hash password by middleware
     await user.save();
+    sendWelcomeEmail(user.email, user.name);
 
     const token = await user.generateAuthToken();
     res.status(201).send({ user, token });
@@ -57,7 +62,8 @@ const deleteUser = async (req, res) => {
     //Not needed any more
     // const user = await User.findByIdAndDelete(req.user._id);
     // if (!user) return res.status(404).send();
-    await User.findOneAndDelete({ _id: req.user._id });
+    const user = await User.findOneAndDelete({ _id: req.user._id });
+    sendCancellationEmail(user.email, user.name);
 
     res.send("User was successfully deleted");
   } catch (err) {
