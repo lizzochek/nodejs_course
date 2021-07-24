@@ -16,11 +16,18 @@ const addTask = async (req, res) => {
   }
 };
 
+// tasks?completed=true
+// tasks?limit=10&skip=0
 const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({
-      completed: req.query.completed,
+    const searchOptions = {
       owner: req.user._id,
+    };
+    if (req.query.completed) searchOptions.completed = req.query.completed;
+
+    const tasks = await Task.find(searchOptions, null, {
+      limit: parseInt(req.query.limit),
+      skip: parseInt(req.query.skip),
     });
 
     res.send(tasks);
