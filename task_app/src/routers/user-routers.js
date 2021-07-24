@@ -23,26 +23,33 @@ const upload = multer({
 
 const {
   addUser,
+
   getUserProfile,
   updateUser,
   deleteUser,
+
   loginUser,
   logoutUser,
   logoutAll,
+
   uploadFile,
   errorHandler,
   deleteAvatar,
+  getAvatar,
 } = require("../controllers/user-controller.js");
 
 const router = new express.Router();
 
 router.post("/users", addUser);
+
 router.get("/users/me", auth, getUserProfile);
 router.patch("/users/me", auth, updateUser);
 router.delete("/users/me", auth, deleteUser);
+
 router.post("/users/login", loginUser);
 router.post("/users/logout", auth, logoutUser);
 router.post("/users/logoutAll", auth, logoutAll);
+
 router.post(
   "/users/me/avatar",
   auth,
@@ -51,5 +58,6 @@ router.post(
   errorHandler
 );
 router.delete("/users/me/avatar", auth, deleteAvatar);
+router.get("/users/:id/avatar", getAvatar);
 
 module.exports = router;

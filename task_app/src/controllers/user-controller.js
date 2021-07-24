@@ -117,19 +117,36 @@ const deleteAvatar = async (req, res) => {
   res.send("Avatar was successfully deleted");
 };
 
+const getAvatar = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user || !user.avatar) throw new Error("Something went wrong");
+
+    res.set("Content-Type", "image/jpg");
+    res.send(user.avatar);
+  } catch (err) {
+    res.status(404).send(err.message);
+  }
+};
+
 const errorHandler = async (error, req, res, next) => {
   res.status(400).send({ error: error.message });
 };
 
 module.exports = {
   addUser,
+
   getUserProfile,
   updateUser,
   deleteUser,
+
   loginUser,
   logoutUser,
   logoutAll,
+
   uploadFile,
   errorHandler,
   deleteAvatar,
+  getAvatar,
 };
