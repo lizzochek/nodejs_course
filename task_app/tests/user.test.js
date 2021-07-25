@@ -1,32 +1,12 @@
 "use strict";
 
 const request = require("supertest");
-const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
-
 const app = require("../src/app.js");
 const User = require("../src/models/user.js");
-
-const userOneId = new mongoose.Types.ObjectId();
-
-const userOne = {
-  _id: userOneId,
-  name: "Anna",
-  email: "anna@example.com",
-  password: "1234567",
-  tokens: [
-    {
-      token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET),
-    },
-  ],
-};
+const { userOneId, userOne, setupDb } = require("./fixtures/db.js");
 
 //Runs before all tests
-beforeEach(async () => {
-  //Delete all users
-  await User.deleteMany();
-  await new User(userOne).save();
-});
+beforeEach(setupDb);
 
 test("Should create a new user", async () => {
   const response = await request(app)
@@ -135,7 +115,4 @@ test("Should not update invalid fields", async () => {
       home: "Kyiv",
     })
     .expect(400);
-
-  const user = await User.findById(userOneId);
-  expect(user.name).toEqual("Anna");
 });
