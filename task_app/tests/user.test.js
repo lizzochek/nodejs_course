@@ -33,6 +33,17 @@ test("Should create a new user", async () => {
   expect(user.password).not.toBe("123456");
 });
 
+test("Should not signup user with invalid fields", async () => {
+  const response = await request(app)
+    .post("/users")
+    .send({
+      name: "Liza",
+      email: "littled",
+      password: "123456",
+    })
+    .expect(400);
+});
+
 test("Should login existing user", async () => {
   const response = await request(app)
     .post("/users/login")
@@ -115,4 +126,22 @@ test("Should not update invalid fields", async () => {
       home: "Kyiv",
     })
     .expect(400);
+});
+
+test("Should not update user if unauthenticated", async () => {
+  await request(app)
+    .patch("/users/me")
+    .send({
+      name: "Jessica",
+    })
+    .expect(401);
+});
+
+test("Should not update user with invalid fields", async () => {
+  await request(app)
+    .patch("/users/me")
+    .send({
+      email: "haha",
+    })
+    .expect(401);
 });

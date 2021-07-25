@@ -41,6 +41,20 @@ test("Should get users tasks", async () => {
   expect(response.body.length).toBe(1);
 });
 
+test("Should not fetch user task by id if unauthenticated", async () => {
+  await request(app).get("/tasks").send().expect(401);
+});
+
+test("Should not fetch other users tasks", async () => {
+  const response = await request(app)
+    .get("/tasks")
+    .set("Authorization", `Bearer ${userTwo.tokens[0].token}`)
+    .send()
+    .expect(200);
+
+  expect(response.body.length).toBe(1);
+});
+
 test("Should delete only a user-owned tasks", async () => {
   const response = await request(app)
     .delete(`/tasks`)
@@ -50,4 +64,8 @@ test("Should delete only a user-owned tasks", async () => {
 
   const task = await Task.findById(taskOne._id);
   expect(task).not.toBeNull();
+});
+
+test("Should not delete task if unauthenticated", async () => {
+  await request(app).delete(`/tasks`).send().expect(404);
 });
