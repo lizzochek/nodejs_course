@@ -19,9 +19,21 @@ io.on("connection", (socket) => {
   console.log("New user connected");
 
   socket.emit("message", "Welcome to the chat app!");
+  socket.broadcast.emit("message", "A new user joined");
 
   socket.on("sendMessage", (message) => {
     io.emit("message", message);
+  });
+
+  socket.on("sendLocation", (coords) => {
+    io.emit(
+      "message",
+      `Location: https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`
+    );
+  });
+
+  socket.on("disconnect", () => {
+    io.emit("message", "A user has left");
   });
 });
 
