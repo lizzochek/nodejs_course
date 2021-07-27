@@ -7,9 +7,16 @@ const form = document.querySelector("#message-form");
 const formInput = form.querySelector("input");
 const formButton = form.querySelector("button");
 const locationButton = document.querySelector("#share-location");
+const messages = document.querySelector("#messages");
+
+//Templates
+const messageTemplate = document.querySelector("#message-template").innerHTML;
 
 socket.on("message", (message) => {
-  console.log(message);
+  const html = Mustache.render(messageTemplate, {
+    message,
+  });
+  messages.insertAdjacentHTML("beforeend", html);
 });
 
 form.addEventListener("submit", (e) => {
