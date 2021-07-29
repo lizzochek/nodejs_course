@@ -18,8 +18,6 @@ const publicDirectoryPath = path.join(__dirname, "../public");
 app.use(express.static(publicDirectoryPath));
 
 io.on("connection", (socket) => {
-  console.log("New user connected");
-
   socket.emit("message", generateMessage("Welcome to the chat app!"));
   socket.broadcast.emit("message", generateMessage("A new user joined"));
 

@@ -1,28 +1,46 @@
 <!DOCTYPE html>
 <html>
   <head>
-    Chat app
+    <title>Chat app</title>
+    <link rel="icon" href="/img/favicon.png" />
+    <link rel="stylesheet" href="/css/styles.min.css" />
   </head>
 
-  <div id="messages"></div>
-
   <body>
-    <form id="message-form">
-      <input name="message" placeholder="Type your message" />
-      <button>Send</button>
-    </form>
+    <div class="chat">
+      <div class="chat__sidebar"></div>
+      <div class="chat__main">
+        <div id="messages" class="chat__messages"></div>
 
-    <button id="share-location">Share location</button>
+        <div class="compose">
+          <form id="message-form">
+            <input name="message" placeholder="Type your message" />
+            <button>Send</button>
+          </form>
+
+          <button id="share-location">Share location</button>
+        </div>
+      </div>
+    </div>
 
     <script id="message-template" type="text/html">
-      <div>
-        <p>{{createdAt}} - {{message}}</p>
+      <div class="message">
+        <p>
+          <span class="message__name">Some name</span>
+          <span class="message__meta">{{createdAt}}</span>
+        </p>
+        <p>{{message}}</p>
       </div>
     </script>
 
     <script id="location-template" type="text/html">
-      <div>
-        <p>{{createdAt}} - <a href="{{url}}">My current location</a></p>
+      <div class="message">
+        <p>
+          <span class="message__name">Some name</span>
+          <span class="message__meta">{{createdAt}}</span>
+        </p>
+
+        <p><a href="{{url}}">My current location</a></p>
       </div>
     </script>
 
